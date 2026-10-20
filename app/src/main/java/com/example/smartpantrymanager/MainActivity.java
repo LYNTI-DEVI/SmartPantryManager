@@ -1,8 +1,10 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,13 +30,24 @@ public class MainActivity extends AppCompatActivity {
             Log.d("SmartPantryDB",
                     "SQLite has connected");
 
-
-
         } catch (Exception e) {
 
             Log.e("SmartPantryDB",
                     "Database failed to connect: " + e.getMessage());
         }
+
+        // connect the Add Ingredient button
+        Button btnAddIngredient =
+                findViewById(R.id.btnAddIngredient);
+
+        btnAddIngredient.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    AddIngredientActivity.class
+            );
+
+            startActivity(intent);
+        });
     }
 
     @Override
