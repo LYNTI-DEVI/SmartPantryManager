@@ -443,4 +443,94 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return rowsDeleted > 0;
     }
+
+    // retrieve all recipes from the database
+    public List<Recipe> getAllRecipes() {
+
+        List<Recipe> recipeList = new ArrayList<>();
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(
+                TABLE_RECIPES,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "id ASC"
+        );
+
+        try {
+            int idIndex = cursor.getColumnIndexOrThrow("id");
+            int nameIndex = cursor.getColumnIndexOrThrow("name");
+            int instructionsIndex = cursor.getColumnIndexOrThrow("instructions");
+
+            while (cursor.moveToNext()) {
+
+                int id = cursor.getInt(idIndex);
+                String name = cursor.getString(nameIndex);
+                String instructions = cursor.getString(instructionsIndex);
+
+                Recipe recipe = new Recipe(id, name, instructions);
+
+                recipeList.add(recipe);
+            }
+
+        } finally {
+            cursor.close();
+        }
+
+        return recipeList;
+    }
+
+    // retrieve the ingredients required for a recipe
+    public List<RecipeIngredient> getRecipeIngredients(int recipeId) {
+
+        List<RecipeIngredient> ingredientList = new ArrayList<>();
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        Cursor cursor = database.query(
+                TABLE_RECIPE_INGREDIENTS,
+                null,
+                "recipe_id = ?",
+                new String[]{String.valueOf(recipeId)},
+                null,
+                null,
+                "id ASC"
+        );
+
+        try {
+            int idIndex = cursor.getColumnIndexOrThrow("id");
+            int recipeIdIndex = cursor.getColumnIndexOrThrow("recipe_id");
+            int nameIndex = cursor.getColumnIndexOrThrow("ingredient_name");
+            int quantityIndex = cursor.getColumnIndexOrThrow("quantity");
+            int unitIndex = cursor.getColumnIndexOrThrow("unit");
+
+            while (cursor.moveToNext()) {
+
+                int id = cursor.getInt(idIndex);
+                int savedRecipeId = cursor.getInt(recipeIdIndex);
+                String name = cursor.getString(nameIndex);
+                double quantity = cursor.getDouble(quantityIndex);
+                String unit = cursor.getString(unitIndex);
+
+                RecipeIngredient ingredient = new RecipeIngredient(
+                        id,
+                        savedRecipeId,
+                        name,
+                        quantity,
+                        unit
+                );
+
+                ingredientList.add(ingredient);
+            }
+
+        } finally {
+            cursor.close();
+        }
+
+        return ingredientList;
+    }
 }
