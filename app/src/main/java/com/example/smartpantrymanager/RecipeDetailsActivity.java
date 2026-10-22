@@ -1,6 +1,7 @@
 package com.example.smartpantrymanager;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private TextView tvRecipeDetailsName;
     private TextView tvRecipeIngredients;
     private TextView tvRecipeInstructions;
+    private Button btnBackToRecipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         tvRecipeDetailsName = findViewById(R.id.tvRecipeDetailsName);
         tvRecipeIngredients = findViewById(R.id.tvRecipeIngredients);
         tvRecipeInstructions = findViewById(R.id.tvRecipeInstructions);
+        btnBackToRecipes = findViewById(R.id.btnBackToRecipes);
 
         String recipeName = getIntent().getStringExtra("recipe_name");
         String recipeInstructions = getIntent().getStringExtra("recipe_instructions");
@@ -47,5 +50,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         tvRecipeIngredients.setText(ingredientsText.toString());
         tvRecipeInstructions.setText(recipeInstructions);
+
+        // return to the recommended recipes list
+        btnBackToRecipes.setOnClickListener(v -> finish());
     }
 }

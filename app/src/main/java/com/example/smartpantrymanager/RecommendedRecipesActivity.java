@@ -3,6 +3,7 @@ package com.example.smartpantrymanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ public class RecommendedRecipesActivity extends AppCompatActivity {
     private TextView tvNoRecipes;
     private DatabaseHelper databaseHelper;
     private RecipeRecommender recipeRecommender;
+    private Button btnBackToPantry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,10 @@ public class RecommendedRecipesActivity extends AppCompatActivity {
 
         recyclerViewRecipes = findViewById(R.id.recyclerViewRecipes);
         tvNoRecipes = findViewById(R.id.tvNoRecipes);
+        btnBackToPantry = findViewById(R.id.btnBackToPantry);
+
+        // return to the pantry screen
+        btnBackToPantry.setOnClickListener(v -> finish());
 
         databaseHelper = new DatabaseHelper(this);
         recipeRecommender = new RecipeRecommender(databaseHelper);

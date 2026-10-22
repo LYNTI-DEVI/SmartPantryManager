@@ -66,7 +66,18 @@
             android:text="Cooking instructions will appear here."
             android:textSize="16sp"
             android:textColor="#555555"
-            android:lineSpacingExtra="6dp" />
+            android:lineSpacingExtra="6dp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Back to Recipes Button -->
+        <Button
+            android:id="@+id/btnBackToRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back to Recipes"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#2E7D32" />
 
     </LinearLayout>
 

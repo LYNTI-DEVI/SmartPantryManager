@@ -140,6 +140,18 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
+        // connect the Settings button
+        Button btnSettings = findViewById(R.id.btnSettings);
+
+        btnSettings.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SettingsActivity.class
+            );
+
+            startActivity(intent);
+        });
     }
 
     // load the saved ingredients
