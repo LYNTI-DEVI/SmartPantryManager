@@ -1,8 +1,12 @@
 package com.example.smartpantrymanager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class RecipeRecommender {
 
@@ -22,6 +26,24 @@ public class RecipeRecommender {
         List<Ingredient> pantryIngredients =
                 databaseHelper.getAllIngredients();
 
+        Map<String, Double> pantryQuantities = new HashMap<>();
+        Map<String, String> pantryUnits = new HashMap<>();
+
+        for (Ingredient pantry : pantryIngredients) {
+
+            String name = normalizeName(pantry.getName());
+
+            pantryQuantities.put(
+                    name,
+                    pantryQuantities.getOrDefault(name, 0.0)
+                            + pantry.getQuantity()
+            );
+
+            pantryUnits.put(name, pantry.getUnit());
+        }
+
+        Map<Integer, Double> recipeScores = new HashMap<>();
+
         for (Recipe recipe : allRecipes) {
 
             List<RecipeIngredient> requiredIngredients =
@@ -31,16 +53,18 @@ public class RecipeRecommender {
                 continue;
             }
 
-            boolean canPrepareRecipe = true;
+            int matchedIngredients = 0;
 
             for (RecipeIngredient required : requiredIngredients) {
+
+                String requiredName =
+                        normalizeName(required.getIngredientName());
 
                 double availableQuantity = 0;
 
                 for (Ingredient pantry : pantryIngredients) {
 
-                    if (normalizeName(pantry.getName()).equals(
-                            normalizeName(required.getIngredientName()))) {
+                    if (normalizeName(pantry.getName()).equals(requiredName)) {
 
                         double convertedQuantity = convertQuantity(
                                 pantry.getQuantity(),
@@ -54,16 +78,34 @@ public class RecipeRecommender {
                     }
                 }
 
-                if (availableQuantity < required.getQuantity()) {
-                    canPrepareRecipe = false;
-                    break;
+                if (availableQuantity >= required.getQuantity()) {
+                    matchedIngredients++;
                 }
             }
 
-            if (canPrepareRecipe) {
+            if (matchedIngredients > 0) {
+
+                double score = (double) matchedIngredients
+                        / requiredIngredients.size();
+
+                recipeScores.put(recipe.getId(), score);
                 matchingRecipes.add(recipe);
             }
         }
+
+        Collections.sort(matchingRecipes, new Comparator<Recipe>() {
+            @Override
+            public int compare(Recipe first, Recipe second) {
+
+                double firstScore =
+                        recipeScores.getOrDefault(first.getId(), 0.0);
+
+                double secondScore =
+                        recipeScores.getOrDefault(second.getId(), 0.0);
+
+                return Double.compare(secondScore, firstScore);
+            }
+        });
 
         return matchingRecipes;
     }
@@ -79,42 +121,50 @@ public class RecipeRecommender {
                 .toLowerCase(Locale.ROOT)
                 .replaceAll("\\s+", " ");
 
-        if (normalized.equals("egg")) {
+        if (normalized.equals("egg") || normalized.equals("eggs")) {
             return "eggs";
         }
 
-        if (normalized.equals("potato")) {
+        if (normalized.equals("potato") || normalized.equals("potatoes")) {
             return "potatoes";
         }
 
-        if (normalized.equals("carrot")) {
+        if (normalized.equals("carrot") || normalized.equals("carrots")) {
             return "carrots";
         }
 
-        if (normalized.equals("tomatoes")) {
-            return "tomato";
+        if (normalized.equals("tomato") || normalized.equals("tomatoes")) {
+            return "tomatoes";
         }
 
-        if (normalized.equals("pepper")) {
+        if (normalized.equals("onion") || normalized.equals("onions")) {
+            return "onions";
+        }
+
+        if (normalized.equals("pepper") || normalized.equals("peppers")) {
             return "peppers";
         }
 
-        if (normalized.equals("onions")) {
-            return "onion";
+        if (normalized.equals("banana") || normalized.equals("bananas")) {
+            return "bananas";
         }
 
-        if (normalized.equals("banana") ||
-                normalized.equals("bananas")) {
-            return "banana";
+        if (normalized.equals("maize meal") || normalized.equals("maizemeal")) {
+            return "maize meal";
+        }
+
+        if (normalized.equals("baked beans")) {
+            return "baked beans";
         }
 
         return normalized;
     }
 
     // convert compatible measurement units
-    private double convertQuantity(double quantity,
-                                   String pantryUnit,
-                                   String requiredUnit) {
+    private double convertQuantity(
+            double quantity,
+            String pantryUnit,
+            String requiredUnit) {
 
         if (pantryUnit == null || requiredUnit == null) {
             return -1;
@@ -151,33 +201,34 @@ public class RecipeRecommender {
 
         String normalized = unit.trim().toLowerCase(Locale.ROOT);
 
-        if (normalized.equals("grams") ||
-                normalized.equals("gram")) {
+        if (normalized.equals("grams")
+                || normalized.equals("gram")) {
             return "g";
         }
 
-        if (normalized.equals("kilograms") ||
-                normalized.equals("kilogram")) {
+        if (normalized.equals("kilograms")
+                || normalized.equals("kilogram")) {
             return "kg";
         }
 
-        if (normalized.equals("millilitres") ||
-                normalized.equals("milliliters") ||
-                normalized.equals("millilitre") ||
-                normalized.equals("milliliter")) {
+        if (normalized.equals("millilitres")
+                || normalized.equals("milliliters")
+                || normalized.equals("millilitre")
+                || normalized.equals("milliliter")) {
             return "ml";
         }
 
-        if (normalized.equals("litres") ||
-                normalized.equals("liters") ||
-                normalized.equals("litre") ||
-                normalized.equals("liter")) {
+        if (normalized.equals("litres")
+                || normalized.equals("liters")
+                || normalized.equals("litre")
+                || normalized.equals("liter")) {
             return "l";
         }
 
-        if (normalized.equals("pieces") ||
-                normalized.equals("piece") ||
-                normalized.equals("pc")) {
+        if (normalized.equals("pieces")
+                || normalized.equals("piece")
+                || normalized.equals("pc")
+                || normalized.equals("pcs")) {
             return "pcs";
         }
 

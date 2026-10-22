@@ -127,6 +127,19 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
+        // connect the Recommended Recipes button
+        Button btnRecommendedRecipes =
+                findViewById(R.id.btnRecommendedRecipes);
+
+        btnRecommendedRecipes.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    RecommendedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
     }
 
     // load the saved ingredients

@@ -50,6 +50,17 @@
         android:textSize="16sp"
         android:textColor="#FFFFFF"
         android:backgroundTint="#2E7D32"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="10dp" />
+
+    <!-- Recommended Recipes Button -->
+    <Button
+        android:id="@+id/btnRecommendedRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recommended Recipes"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#558B2F"
+        android:layout_marginBottom="10dp" />
 
 </LinearLayout>
