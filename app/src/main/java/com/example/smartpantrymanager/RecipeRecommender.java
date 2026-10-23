@@ -54,6 +54,7 @@ public class RecipeRecommender {
             }
 
             int matchedIngredients = 0;
+            boolean allIngredientsAvailable = true;
 
             for (RecipeIngredient required : requiredIngredients) {
 
@@ -80,10 +81,13 @@ public class RecipeRecommender {
 
                 if (availableQuantity >= required.getQuantity()) {
                     matchedIngredients++;
+                } else {
+                    allIngredientsAvailable = false;
+                    break;
                 }
             }
 
-            if (matchedIngredients > 0) {
+            if (allIngredientsAvailable) {
 
                 double score = (double) matchedIngredients
                         / requiredIngredients.size();

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // connect the Settings button
-        Button btnSettings = findViewById(R.id.btnSettings);
+        TextView btnSettings = findViewById(R.id.btnSettings);
 
         btnSettings.setOnClickListener(v -> {
             Intent intent = new Intent(

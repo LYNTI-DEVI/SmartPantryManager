@@ -33,6 +33,9 @@ public class AddIngredientActivity extends AppCompatActivity {
         Button btnSaveIngredient =
                 findViewById(R.id.btnSaveIngredient);
 
+        Button btnBackToPantry =
+                findViewById(R.id.btnBackToPantry);
+
         // database connection
         databaseHelper = new DatabaseHelper(this);
 
@@ -62,6 +65,8 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         // this saves the inputs which are entered
         btnSaveIngredient.setOnClickListener(v -> saveIngredient());
+
+        btnBackToPantry.setOnClickListener(v -> finish());
     }
 
     private void saveIngredient() {
